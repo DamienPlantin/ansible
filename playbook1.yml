@@ -1,0 +1,41 @@
+- name: Brief Ansible
+  hosts: webserverss
+  remote_user: root
+  become: yes
+  vars:
+    users:
+      - username: damien
+        use_sudo: yes
+      - username: john
+        use_sudo: yes
+
+  tasks:
+    - name: Install packages
+      apt: name={{ item }}
+      with_items:
+        - bash
+        - sudo
+        - python
+
+    - name: Create user 
+      user: name={{item.username}} shell=/bin/bash createhome=yes comment='create with ansible'
+      with_items: '{{users}}'
+
+    - name: Setup | authorized key upload
+      authorized_key: user={{ item.username }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      with_items: '{{users}}'
+
+    - name: Sudoers | update sudoers file and validate
+      lineinfile: "dest=/etc/sudoers
+      insertafter=EOF
+      line='{{ item.username }} ALL=(ALL) NOPASSWD: ALL'
+      regexp='^{{ item.username }} .*'
+      state=present"
+      when: '{{ item.use_sudo }} == True'
+      with_items: '{{users}}'
+    
+    - name: Copy file alias
+      copy:
+        src: /mnt/c/Users/utilisateur/Desktop/Simplon/ansible/.alias
+        dest: /home/{{item.username}}/.bashrc
+      with_items: '{{users}}'
