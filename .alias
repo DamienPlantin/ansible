@@ -82,7 +82,7 @@ alias m3="py3 manage.py"
 alias d2="py django"
 alias m2="py manage.py"
 alias pip3i="python3 -m pip install --user"
-alias cd=pyenv_or_not_pyenv
+# alias cd=pyenv_or_not_pyenv
 
 # apt alias
 alias apt-get="sudo apt-get -y"

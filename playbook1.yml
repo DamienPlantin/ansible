@@ -1,5 +1,5 @@
-- name: Brief Ansible
-  hosts: webserverss
+- name: Brief Ansible PLaybook 1
+  hosts: webservers
   remote_user: root
   become: yes
   vars:
@@ -37,5 +37,5 @@
     - name: Copy file alias
       copy:
         src: /mnt/c/Users/utilisateur/Desktop/Simplon/ansible/.alias
-        dest: /home/{{item.username}}/.bashrc
+        dest: /home/{{item.username}}/.bash_aliases
       with_items: '{{users}}'
