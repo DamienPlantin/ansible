@@ -1,0 +1,3 @@
+- import_playbook: playbook2_nginx.yml
+- import_playbook: playbook2_ssl.yml
+- import_playbook: playbook2_fail2ban.yml

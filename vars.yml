@@ -1,4 +1,0 @@
-domain: vm2damien.francecentral.cloudapp.azure.com
-certs_path: ~/certs
-crt_common_name: vm2damien.francecentral.cloudapp.azure.com
-site_path: site

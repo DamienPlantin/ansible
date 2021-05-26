@@ -1,0 +1,63 @@
+- name: Config SSL
+  hosts: proxy
+  remote_user: root
+  become: yes
+  vars_files: playbook2_vars.yml
+
+  tasks:
+  - name: Generate an OpenSSL A private key with the default values (4096 bits, RSA)
+    community.crypto.openssl_privatekey:
+      path: '{{ ssl_key_a }}'
+  
+  - name: Generate an OpenSSL B private key with the default values (4096 bits, RSA)
+    community.crypto.openssl_privatekey:
+      path: '{{ ssl_key_b }}'
+
+  - name: Make acme_account
+    community.crypto.acme_account:
+      acme_version: 2
+      account_key_src: '{{ ssl_key_a }}'
+      state: present
+      terms_agreed: yes
+      acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+      contact:
+        - mailto:damien2809@hotmail.fr
+
+  - name: Generate CSR
+    community.crypto.openssl_csr:
+      path: '{{ ssl_csr }}'
+      privatekey_path: '{{ ssl_key_b }}'
+      common_name: '{{domaine_name}}'
+
+  - name: create acme challenge
+    community.crypto.acme_certificate:
+      acme_version: 2
+      terms_agreed: yes
+      account_key_src: '{{ ssl_key_a }}'
+      csr: '{{ ssl_csr }}'
+      dest: '{{ ssl_crt }}'
+      challenge: http-01
+      acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+      remaining_days: 60
+      
+    register: challenge
+
+  - name: Next challenge
+    copy:
+      dest: /var/www/html/{{ challenge['challenge_data']['vm2damien2.francecentral.cloudapp.azure.com']['http-01']['resource'] }}
+      content: "{{ challenge['challenge_data']['vm2damien2.francecentral.cloudapp.azure.com']['http-01']['resource_value'] }}"
+    when: challenge is changed and 'vm2damien2.francecentral.cloudapp.azure.com' in challenge['challenge_data']
+
+  - name: validate acme challenge
+    community.crypto.acme_certificate:
+      acme_version: 2 
+      account_key_src: '{{ ssl_key_a }}'
+      csr: '{{ ssl_csr }}'
+      dest: '{{ ssl_crt }}'
+      # fullchain: '{{ ssl_full }}'
+      # chain: '{{ ssl_chain }}'
+      challenge: http-01
+      acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+      remaining_days: 60
+      data: '{{ challenge }}'
+    # when: challenge is changed

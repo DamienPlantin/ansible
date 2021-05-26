@@ -1,0 +1,25 @@
+- name: Config NGINX + FAIL2BAN
+  hosts: proxy
+  remote_user: root
+  become: yes
+  vars_files: playbook2_vars.yml
+
+  tasks:
+  - name: copy nginx config file
+    template:
+      src: templates/nginx.conf.j2
+      dest: /etc/nginx/sites-available/default
+    notify: restart nginx
+
+  - name: Enable fail2ban service
+    systemd:
+      name: fail2ban
+      enabled: yes
+      state: started
+
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

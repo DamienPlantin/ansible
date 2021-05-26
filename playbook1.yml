@@ -16,6 +16,7 @@
         - bash
         - sudo
         - python
+        - pelican
 
     - name: Create user 
       user: name={{item.username}} shell=/bin/bash createhome=yes comment='create with ansible'

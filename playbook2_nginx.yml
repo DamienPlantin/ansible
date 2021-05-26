@@ -1,0 +1,46 @@
+- name: Config NGINX
+  hosts: proxy
+  remote_user: root
+  become: yes
+  vars_files: playbook2_vars.yml
+  vars:
+    packages:
+      - python-apt
+      - nginx
+      - fail2ban
+
+
+  tasks:
+  - name: "apt-get update"
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+  
+  - name: Install packages
+    apt: name={{ item }} state=latest update_cache=yes
+    loop: '{{ packages }}'
+  
+  - name: "Create .well-known/acme-challenge directory"
+    file:
+      path: /var/www/html/.well-known/acme-challenge
+      state: directory
+      mode: '0775'
+
+  - name: copy index.html
+    template:
+      src: templates/index.html.j2
+      dest: /usr/share/nginx/html/index.html
+      mode: 0644
+    notify: restart nginx
+
+  - name: copy nginx config file
+    template:
+      src: templates/nginxd.conf.j2
+      dest: /etc/nginx/sites-available/default
+    notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
