@@ -1,0 +1,3 @@
+# - import_playbook: playbook3_install.yml
+- import_playbook: playbook3_pelican.yml 
+# - import_playbook: playbook3_

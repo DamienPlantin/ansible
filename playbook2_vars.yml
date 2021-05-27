@@ -1,8 +1,8 @@
 domaine_name: vm2damien2.francecentral.cloudapp.azure.com
-ssl_crt:     "/etc/nginx/{{ domain }}.crt"
-ssl_key_a:     "/etc/nginx/{{ domain }}-a.pem"
-ssl_key_b:     "/etc/nginx/{{ domain }}-b.pem"
-ssl_csr:     "/etc/nginx/{{ domain }}.csr"
+ssl_crt:      "/etc/nginx/{{ domain }}.crt"
+ssl_key_a:    "/etc/nginx/{{ domain }}-a.pem"
+ssl_key_b:    "/etc/nginx/{{ domain }}-b.pem"
+ssl_csr:      "/etc/nginx/{{ domain }}.csr"
 server_name: ansible
 domain: vm2damien2
 certs_path: ~/certs
