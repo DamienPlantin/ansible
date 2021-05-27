@@ -1,0 +1,33 @@
+server {
+  listen 80;
+  listen [::]:80;
+  server_name {{ server_name }};
+  location ^~ /.well-known/acme-challenge/ {
+    root /var/www/html/;
+  }
+
+  location / {
+    if ($scheme != "https") {
+      return 301 https://{{ domaine_name }}$request_uri;
+    }
+  }
+}
+
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+  server_name {{ server_name }};
+  
+  location ^~ /.well-known/ {
+    root /var/www/html/;
+  }
+
+  ssl_certificate     {{ ssl_crt }};
+  ssl_certificate_key {{ ssl_key_b }}; 
+
+  location / {
+    proxy_read_timeout 300s;
+    proxy_connect_timeout 75s;
+    proxy_pass http://52.143.160.104/;
+  }
+}

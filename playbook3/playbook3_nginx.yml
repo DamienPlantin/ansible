@@ -1,0 +1,42 @@
+- name: PLAYBOOK3_Config NGINX Playbook2
+  hosts: proxy
+  remote_user: root
+  become: yes
+  vars_files: ../playbook_vars.yml
+
+
+  tasks:
+  - name: copy nginx config file
+    template:
+      src: ../templates/nginxp.conf.j2
+      dest: /etc/nginx/sites-available/default
+    notify: restart nginx
+
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+
+- name: PLAYBOOK3_Config NGINX Playbook3
+  hosts: webapp2
+  remote_user: root
+  become: yes
+  vars_files: ../playbook_vars.yml
+
+
+  tasks:
+  - name: copy nginx config file
+    template:
+      src: ../templates/nginxd2.conf.j2
+      dest: /etc/nginx/sites-available/default
+    notify: restart nginx
+
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

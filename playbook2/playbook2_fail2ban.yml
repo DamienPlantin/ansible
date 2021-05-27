@@ -1,13 +1,13 @@
-- name: Config NGINX + FAIL2BAN
+- name: PLAYBOOK2_Config NGINX + FAIL2BAN
   hosts: proxy
   remote_user: root
   become: yes
-  vars_files: playbook2_vars.yml
+  vars_files: ../playbook_vars.yml
 
   tasks:
   - name: copy nginx config file
     template:
-      src: templates/nginx.conf.j2
+      src: ../templates/nginx.conf.j2
       dest: /etc/nginx/sites-available/default
     notify: restart nginx
 

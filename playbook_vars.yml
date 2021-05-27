@@ -1,3 +1,19 @@
+packages:
+  - bash
+  - sudo
+  - python-apt
+  - pelican
+  - nginx
+  - fail2ban
+
+
+users:
+  - username: damien
+    use_sudo: yes
+  - username: john
+    use_sudo: yes
+
+
 domaine_name: vm2damien2.francecentral.cloudapp.azure.com
 ssl_crt:      "/etc/nginx/{{ domain }}.crt"
 ssl_key_a:    "/etc/nginx/{{ domain }}-a.pem"
@@ -8,3 +24,6 @@ domain: vm2damien2
 certs_path: ~/certs
 crt_common_name: vm2damien2.francecentral.cloudapp.azure.com
 site_path: site
+
+
+path_blog: "/var/www/html/test_blog"

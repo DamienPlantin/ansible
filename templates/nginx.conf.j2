@@ -26,6 +26,6 @@ server {
   ssl_certificate_key {{ ssl_key_b }}; 
 
   location / {
-    proxy_pass http://52.143.176.139:80/;
+    try_files $uri $uri/ =404;
   }
 }

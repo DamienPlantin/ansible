@@ -1,8 +1,9 @@
-- name: Config SSL
+- name: PLAYBOOK2_Config SSL
   hosts: proxy
   remote_user: root
   become: yes
-  vars_files: playbook2_vars.yml
+  vars_files: ../playbook_vars.yml
+
 
   tasks:
   - name: Generate an OpenSSL A private key with the default values (4096 bits, RSA)
@@ -33,13 +34,12 @@
     community.crypto.acme_certificate:
       acme_version: 2
       terms_agreed: yes
+      challenge: http-01
       account_key_src: '{{ ssl_key_a }}'
       csr: '{{ ssl_csr }}'
       dest: '{{ ssl_crt }}'
-      challenge: http-01
-      acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+      acme_directory: https://acme-v02.api.letsencrypt.org/directory
       remaining_days: 60
-      
     register: challenge
 
   - name: Next challenge
@@ -51,13 +51,10 @@
   - name: validate acme challenge
     community.crypto.acme_certificate:
       acme_version: 2 
+      challenge: http-01
       account_key_src: '{{ ssl_key_a }}'
       csr: '{{ ssl_csr }}'
       dest: '{{ ssl_crt }}'
-      # fullchain: '{{ ssl_full }}'
-      # chain: '{{ ssl_chain }}'
-      challenge: http-01
-      acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+      acme_directory: https://acme-v02.api.letsencrypt.org/directory
       remaining_days: 60
       data: '{{ challenge }}'
-    # when: challenge is changed

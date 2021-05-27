@@ -1,0 +1,25 @@
+- name: PLAYBOOK3_Install
+  hosts: webapp2
+  remote_user: root
+  become: yes
+  vars_files: ../playbook_vars.yml
+
+
+  tasks:
+  - name: copy index.html
+    template:
+      src: ../templates/index.html.j2
+      dest: /usr/share/nginx/html/index.html
+      mode: 0644
+    notify: restart nginx
+
+  - name: copy nginx config file
+    template:
+      src: ../templates/nginxd.conf.j2
+      dest: /etc/nginx/sites-available/default
+    notify: restart nginx
+  
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted

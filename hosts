@@ -1,29 +1,16 @@
 [proxy]
 vm2damien2.francecentral.cloudapp.azure.com
 
-[proxy:vars]
-ansible_connection=ssh
-ansible_port=22
-ansible_ssh_private_key_file=/home/damien/.ssh/vmdamien_key.pem
-ansible_user=azureuser
-ansible_python_interpreter=/usr/bin/python3
 
-
-[webapp]
+[webapp1]
 52.143.176.139
-
-[webapp:vars]
-ansible_connection=ssh
-ansible_port=22
-ansible_ssh_private_key_file=/home/damien/.ssh/vmdamien_key.pem
-ansible_user=azureuser
-ansible_python_interpreter=/usr/bin/python3
 
 
 [webapp2]
 52.143.160.104
 
-[webapp2:vars]
+
+[all:vars]
 ansible_connection=ssh
 ansible_port=22
 ansible_ssh_private_key_file=/home/damien/.ssh/vmdamien_key.pem

@@ -1,26 +1,14 @@
-- name: Brief Ansible PLaybook 1
-  hosts: webservers
+- name: PLAYBOOK1_Create users
+  hosts: webapp1
   remote_user: root
   become: yes
-  vars:
-    users:
-      - username: damien
-        use_sudo: yes
-      - username: john
-        use_sudo: yes
+  vars_files: ../playbook_vars.yml
+
 
   tasks:
-    - name: Install packages
-      apt: name={{ item }}
-      with_items:
-        - bash
-        - sudo
-        - python
-        - pelican
-
     - name: Create user 
       user: name={{item.username}} shell=/bin/bash createhome=yes comment='create with ansible'
-      with_items: '{{users}}'
+      loop: '{{users}}'
 
     - name: Setup | authorized key upload
       authorized_key: user={{ item.username }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
@@ -37,6 +25,6 @@
     
     - name: Copy file alias
       copy:
-        src: /mnt/c/Users/utilisateur/Desktop/Simplon/ansible/.alias
+        src: ~/Bureau/Simplon/Simplon/Repo_Git/ansible/.alias
         dest: /home/{{item.username}}/.bash_aliases
       with_items: '{{users}}'

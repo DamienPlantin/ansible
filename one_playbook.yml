@@ -1,0 +1,28 @@
+- name: ONE_PLAYBOOK_Install packages
+  hosts: all
+  remote_user: root
+  become: yes
+  vars_files: playbook_vars.yml
+
+
+  tasks:
+  - name: "apt-get update"
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+  
+  - name: Install packages
+    apt: name={{ item }} state=latest update_cache=yes
+    loop: '{{ packages }}'
+
+
+- name: "PLABOOK 1"
+  import_playbook: playbook1/playbook1.yml
+
+
+- name: "PLABOOK 2"
+  import_playbook: playbook2/playbook2.yml
+
+
+- name: "PLABOOK 3"
+  import_playbook: playbook3/playbook3.yml
