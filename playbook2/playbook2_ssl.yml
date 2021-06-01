@@ -20,7 +20,7 @@
       account_key_src: '{{ ssl_key_a }}'
       state: present
       terms_agreed: yes
-      acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+      acme_directory: https://acme-v02.api.letsencrypt.org/directory
       contact:
         - mailto:damien2809@hotmail.fr
 
